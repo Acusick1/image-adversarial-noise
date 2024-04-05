@@ -1,5 +1,3 @@
-import matplotlib.pyplot as plt
-import numpy as np
 import torch
 from PIL import Image
 from torchvision.transforms import v2
@@ -25,14 +23,3 @@ def get_standard_transforms(
         v2.ToDtype(torch.float32, scale=True),
         v2.Normalize(mean=input_mean, std=input_std),
     ])
-
-
-def tensor_imshow(img):
-    
-    np_img = np.transpose(img.squeeze().detach().numpy(), (1, 2, 0))
-    
-    # Scaling to avoid clipping
-    np_img = (np_img - np_img.min()) / (np_img.max() - np_img.min())
-
-    plt.imshow(np_img)
-    plt.gca().set_axis_off()

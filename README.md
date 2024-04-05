@@ -24,11 +24,13 @@ This is particularly for development purposes when poetry is not installed as it
 
 The method used for adversarial image generation is [projected gradient descent (PGD)](https://arxiv.org/pdf/1706.06083.pdf).
 
-To generate an adversarial image run the top -level [`gen_adversarial_image.py`](gen_adversarial_image.py) scipt, providing a path to an existing image, along with optional arguments such as `model_name` (default: resnet50) and `target_class` (default: random). A typical run command could look something like:
+To generate an adversarial image run the top-level [`gen_adversarial_image.py`](gen_adversarial_image.py) scipt, providing a path to an existing image, along with optional arguments such as `model_name` (default: resnet50) and `target_class` (default: random). A typical run command could look something like:
 
 ```bash
 python gen_adversarial_image.py path/to/image.jpg --model_name resnet50.a1_in1k --target_class 123 --epsilon 0.05 --max_steps 20 --prob_threshold 0.5
 ```
+
+The process will state whether the attack succeeded or failed, and resulting images will be saved in the top-level `outputs` folder. Example images can be found in the [`data/sample_images`](data/sample_images/) directory which may be used to test the approach.
 
 Run `python gen_adversarial_image.py -h` for more input options and descriptions.
 

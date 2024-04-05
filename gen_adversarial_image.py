@@ -4,14 +4,15 @@ import timm
 import torch
 import torch.nn.functional as F
 from pathlib import Path
+from PIL import Image
 from torchvision.transforms.functional import to_pil_image
 from typing import Optional
 from src.adversarial import pgd_attack
-from src.utils import load_image, get_standard_transforms
+from src.utils import get_standard_transforms
 from config import settings, load_in1k_labels
 
-batch_mean = torch.tensor([0.485, 0.456, 0.406]).view(1, -1, 1, 1).to(settings.device)
-batch_std = torch.tensor([0.229, 0.224, 0.225]).view(1, -1, 1, 1).to(settings.device)
+batch_mean = torch.tensor(settings.in1k_mean).view(1, -1, 1, 1).to(settings.device)
+batch_std = torch.tensor(settings.in1k_std).view(1, -1, 1, 1).to(settings.device)
 
 
 def parse_args() -> argparse.Namespace:
@@ -53,10 +54,10 @@ def run(
     assert model.num_classes == 1000
 
     classes = load_in1k_labels()
-    transforms = get_standard_transforms()
+    data_config = timm.data.resolve_model_data_config(model)
+    transforms = get_standard_transforms(centre_crop_to=data_config["input_size"][1])
     
-    input_image = load_image(image_path)
-    # TODO: Put model image sizes into
+    input_image = Image.open(image_path)
     input_image = transforms(input_image).unsqueeze(0)
     
     orig_output = model(input_image)
@@ -77,14 +78,10 @@ def run(
     perturbed_image = perturbed_image * batch_std + batch_mean
     perturbed_image = perturbed_image - perturbed_image.amin() / (perturbed_image.amax() - perturbed_image.amin())
     
-    # TODO: Move to Settings
-    output_path = settings.project_path / "outputs"
-    output_path.mkdir(exist_ok=True)
-    
     # Saving output image
     success_suffix = "SUCCESS" if success else "FAILED"
     save_name = f"{image_path.stem}_to_class{target_class}_{success_suffix}"
-    save_path = (output_path / save_name).with_suffix(".JPEG")
+    save_path = (settings.output_path / save_name).with_suffix(".JPEG")
     to_pil_image(perturbed_image.squeeze()).save(save_path, "JPEG")
     print(f"Perturbed image saved to {save_path.relative_to(settings.project_path.parent)}")
 

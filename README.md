@@ -12,15 +12,17 @@ cd image-adversarial-noise
 pip install .
 ```
 
-Alternatively you can install directly from the `requirements.txt` as normal:
+Alternatively you can clone and install directly from the `requirements.txt` as normal:
 
 ```bash
-pip install requirements.txt
+pip install -r requirements.txt
 ```
 
 This is particularly for development purposes when poetry is not installed as it will also include the necessary dev dependencies.
 
 ## Generate adversarial image
+
+The method used for adversarial image generation is [projected gradient descent (PGD)](https://arxiv.org/pdf/1706.06083.pdf).
 
 To generate an adversarial image run the top -level [`gen_adversarial_image.py`](gen_adversarial_image.py) scipt, providing a path to an existing image, along with optional arguments such as `model_name` (default: resnet50) and `target_class` (default: random). A typical run command could look something like:
 

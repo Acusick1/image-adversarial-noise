@@ -26,7 +26,11 @@ class Settings(BaseSettings):
 settings = Settings()
 
 
+# TODO: Move to in1k dataclass when created
 def load_in1k_labels():
+    """
+    Load imagenet-1k labels from file.
+    """
     
     with open(settings.in1k_labels_path, "r") as f:
         data = json.load(f)

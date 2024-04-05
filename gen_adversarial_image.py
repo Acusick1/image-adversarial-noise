@@ -22,15 +22,13 @@ def parse_args() -> argparse.Namespace:
     
     # TODO: validate within [0, 1000] range
     parser.add_argument("--target_class", default=None, type=int, help="imagenet1k class to target, default is a random class")
-    
-    # TODO: validation contains 'in1k'
     parser.add_argument("--model_name", default="resnet18.a1_in1k", type=str, help="pretrained in1k model to be fooled (from timm model library).")
-    
-    # TODO: descriptions
-    parser.add_argument("--epsilon", default=0.05, type=float)
-    parser.add_argument("--alpha", default=0.01, type=float)
-    parser.add_argument("--max_steps", default=10, type=int)
-    parser.add_argument("--prob_threshold", default=0., type=float)
+
+    # TODO: validate within [0, 1]
+    parser.add_argument("--epsilon", default=0.05, type=float, help="maximum allowable perturbation of input image")
+    parser.add_argument("--alpha", default=0.01, type=float, help="step size for optimization")
+    parser.add_argument("--max_steps", default=10, type=int, help="maximum number of PGD iterations")
+    parser.add_argument("--prob_threshold", default=0., type=float, help="probability threshold to achieve on target class")
 
     args = parser.parse_args()
     return args
